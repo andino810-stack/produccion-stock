@@ -112,13 +112,11 @@ let datos = {
 ]
 
 };
-};
 
 let estados = JSON.parse(localStorage.getItem("estados")) || {};
 let cantidades = JSON.parse(localStorage.getItem("cantidades")) || {};
 
 function guardar(){
- localStorage.setItem("stock", JSON.stringify(datos));
  localStorage.setItem("estados", JSON.stringify(estados));
  localStorage.setItem("cantidades", JSON.stringify(cantidades));
 }
@@ -268,3 +266,4 @@ render();
 </script>
 
 </body>
+</html>
