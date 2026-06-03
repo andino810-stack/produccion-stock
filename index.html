@@ -34,8 +34,84 @@ hr{border:none;border-top:1px solid #ddd}
 </div>
 
 <script>
-let datos = JSON.parse(localStorage.getItem("stock")) || {
 
+let datos = {
+
+"Salsas":[
+"Crema blanca",
+"Vino malbet a la pimienta",
+"Vino malbet con hongos",
+"Salsa de camarones",
+"Parisienne",
+"Fileto",
+"Maracuya",
+"Salsa de anana",
+"Frutos cítricos",
+"Roquefort/4 quesos",
+"Salsa al verdeo"
+],
+
+"Carnes":[
+"Bife de Chorizo",
+"Bondiola",
+"Costilla de cerdo",
+"Pechuga de pollo",
+"Filet mignos",
+"Milanesas(menu kids)",
+"snagger de pollo(menú kids)",
+"Pollo al ajillo"
+],
+
+"Guarnición":[
+"Arroz saborizado",
+"Arroz persa",
+"Papas al natural",
+"Pure de papa",
+"Mandioca hervidas",
+"Batata",
+"Papas fritas",
+"Papas noisete",
+"Brocoli"
+],
+
+"Entradas":[
+"Picadas",
+"Ensalada griega",
+"Rucula con cherrys",
+"Provoleta"
+],
+
+"Pescados":[
+"Salmón",
+"Surubí",
+"Pacú",
+"Pacú (al paquete)",
+"Creps de tinta de calamar"
+],
+
+"Pastas":[
+"Sorrentinos",
+"Ravioles de verduras",
+"Ravioles de calabaza y ricota",
+"Fetuccini",
+"Tallarines",
+"Fetuccini (di mar)",
+"Fetuccini (de rio)"
+],
+
+"Árabe":[
+"Mutabal",
+"Hummus",
+"Sfija",
+"keppe crudo",
+"keppe a la parrilla",
+"Kafta",
+"tabbule",
+"Pan árabe",
+"Niño envuelto"
+]
+
+};
 };
 
 let estados = JSON.parse(localStorage.getItem("estados")) || {};
