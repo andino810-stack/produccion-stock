@@ -16,8 +16,7 @@ hr{border:none;border-top:1px solid #ddd}
 </style>
 </head>
 <body>
-
-<h1>📋 Producción y Stock</h1>
+                                                                  <h1>📋 Producción y Stock</h1>
 <div id="contenedor"></div>
 
 <div class="panel">
@@ -36,8 +35,7 @@ hr{border:none;border-top:1px solid #ddd}
 
 <script>
 let datos = JSON.parse(localStorage.getItem("stock")) || {
-"Salsas":["Blanca","Malbec Pimienta","Malbec Hongos","Demiglace"],
-"Carnes":["Bife de Chorizo","Bondiola","Costilla de Cerdo","Pollo"]
+
 };
 
 let estados = JSON.parse(localStorage.getItem("estados")) || {};
@@ -194,4 +192,3 @@ render();
 </script>
 
 </body>
-</html>
