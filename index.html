@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Producción y Stock</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f5f5f5;padding:15px}
+.categoria,.panel{background:#fff;border-radius:10px;padding:15px;margin-bottom:15px}
+button{padding:10px 15px;margin:2px;border:none;border-radius:5px;cursor:pointer;color:#fff;font-size:18px}
+.verde{background:green}.rojo{background:red}.gris{background:#bdbdbd}.eliminar{background:#444}
+input,select{width:100%;padding:10px;margin:6px 0;box-sizing:border-box}
+.producto{padding:10px 0}.botones{margin-top:10px}
+hr{border:none;border-top:1px solid #ddd}
+.contador{font-weight:bold;font-size:20px;padding:0 10px}
+</style>
+</head>
+<body>
+
+<h1>📋 Producción y Stock</h1>
+<div id="contenedor"></div>
+
+<div class="panel">
+<h3>➕ Agregar Producto</h3>
+<input id="nuevoProducto" placeholder="Producto">
+<select id="categoriaSelect"></select>
+<button class="verde" onclick="agregarProducto()">Agregar</button>
+
+<h3>📁 Nueva Categoría</h3>
+<input id="nuevaCategoria" placeholder="Categoría">
+<button class="gris" onclick="agregarCategoria()">Crear</button>
+
+<hr>
+<button class="verde" onclick="enviarWhatsapp()">📲 Enviar WhatsApp</button>
+</div>
+
+<script>
+let datos = JSON.parse(localStorage.getItem("stock")) || {
+"Salsas":["Blanca","Malbec Pimienta","Malbec Hongos","Demiglace"],
+"Carnes":["Bife de Chorizo","Bondiola","Costilla de Cerdo","Pollo"]
+};
+
+let estados = JSON.parse(localStorage.getItem("estados")) || {};
+let cantidades = JSON.parse(localStorage.getItem("cantidades")) || {};
+
+function guardar(){
+ localStorage.setItem("stock", JSON.stringify(datos));
+ localStorage.setItem("estados", JSON.stringify(estados));
+ localStorage.setItem("cantidades", JSON.stringify(cantidades));
+}
+
+function render(){
+ let html="";
+
+ for(let categoria in datos){
+
+   html += `<div class="categoria"><h2>${categoria}</h2>`;
+
+   datos[categoria].forEach(p=>{
+
+     let e = estados[p] || "";
+     let cantidad = cantidades[p] || 0;
+
+     let claseVerde = e=="ok" ? "verde" : "gris";
+     let claseRojo  = e=="no" ? "rojo" : "gris";
+
+     html += `
+     <div class="producto">
+       <b>${p}</b>
+
+       <div class="botones">
+
+         <button class="${claseVerde}" onclick="setEstado('${p}','ok')">✅</button>
+
+         <button class="${claseRojo}" onclick="setEstado('${p}','no')">❌</button>
+
+         <button class="gris" onclick="restarCantidad('${p}')">➖</button>
+
+         <span class="contador">${cantidad}</span>
+
+         <button class="verde" onclick="sumarCantidad('${p}')">➕</button>
+
+         <button class="eliminar" onclick="eliminarProducto('${categoria}','${p}')">🗑️</button>
+
+       </div>
+     </div>
+     <hr>`;
+   });
+
+   html += `</div>`;
+ }
+
+ document.getElementById("contenedor").innerHTML = html;
+ actualizarCategorias();
+}
+
+function setEstado(p,e){
+ estados[p]=e;
+ guardar();
+ render();
+}
+
+function sumarCantidad(producto){
+ cantidades[producto] = (cantidades[producto] || 0) + 1;
+ guardar();
+ render();
+}
+
+function restarCantidad(producto){
+ cantidades[producto] = Math.max((cantidades[producto] || 0) - 1, 0);
+ guardar();
+ render();
+}
+
+function eliminarProducto(categoria, producto){
+ if(confirm("¿Eliminar " + producto + "?")){
+   datos[categoria] = datos[categoria].filter(item => item !== producto);
+   delete estados[producto];
+   delete cantidades[producto];
+   guardar();
+   render();
+ }
+}
+
+function actualizarCategorias(){
+ let s=document.getElementById("categoriaSelect");
+ s.innerHTML="";
+ for(let c in datos){
+   s.innerHTML += `<option>${c}</option>`;
+ }
+}
+
+function agregarProducto(){
+ let p=document.getElementById("nuevoProducto").value.trim();
+ let c=document.getElementById("categoriaSelect").value;
+
+ if(!p) return;
+
+ datos[c].push(p);
+
+ guardar();
+ render();
+
+ document.getElementById("nuevoProducto").value="";
+}
+
+function agregarCategoria(){
+ let c=document.getElementById("nuevaCategoria").value.trim();
+
+ if(!c) return;
+
+ if(!datos[c]){
+   datos[c]=[];
+ }
+
+ guardar();
+ render();
+
+ document.getElementById("nuevaCategoria").value="";
+}
+
+function enviarWhatsapp(){
+
+ let m="📋 STOCK ACTUAL\n\n";
+
+ for(let c in datos){
+
+   m += c + "\n";
+
+   datos[c].forEach(p=>{
+
+     let cantidad = cantidades[p] || 0;
+
+     if(estados[p]=="ok"){
+       m += "✅ " + p + (cantidad>0 ? " ("+cantidad+")" : "") + "\n";
+     }
+
+     if(estados[p]=="no"){
+       m += "❌ " + p + (cantidad>0 ? " ("+cantidad+")" : "") + "\n";
+     }
+
+   });
+
+   m += "\n";
+ }
+
+ window.open(
+   "https://wa.me/?text=" + encodeURIComponent(m),
+   "_blank"
+ );
+}
+
+render();
+</script>
+
+</body>
+</html>
